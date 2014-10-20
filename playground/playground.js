@@ -56955,7 +56955,7 @@ $packages["go/format"] = (function() {
 	return $pkg;
 })();
 $packages["/home/h8liu/projects/gojs-pg/playground"] = (function() {
-	var $pkg = {}, bytes = $packages["bytes"], angularjs = $packages["github.com/gopherjs/go-angularjs"], compiler = $packages["github.com/gopherjs/gopherjs/compiler"], js = $packages["github.com/gopherjs/gopherjs/js"], ast = $packages["go/ast"], format = $packages["go/format"], parser = $packages["go/parser"], scanner = $packages["go/scanner"], token = $packages["go/token"], strings = $packages["strings"], time = $packages["time"], fmt = $packages["fmt"], Line, output, errLine, errErrLine, getCode, control, main, outLine, setupEnvironment;
+	var $pkg = {}, bytes = $packages["bytes"], angularjs = $packages["github.com/gopherjs/go-angularjs"], compiler = $packages["github.com/gopherjs/gopherjs/compiler"], js = $packages["github.com/gopherjs/gopherjs/js"], ast = $packages["go/ast"], format = $packages["go/format"], parser = $packages["go/parser"], scanner = $packages["go/scanner"], token = $packages["go/token"], strings = $packages["strings"], time = $packages["time"], fmt = $packages["fmt"], Line, output, errLine, errErrLine, getCode, setCode, control, main, outLine, setupEnvironment;
 	Line = $pkg.Line = $newType(4, "Map", "main.Line", "Line", "/home/h8liu/projects/gojs-pg/playground", null);
 	errLine = function(s) {
 		var _map, _key;
@@ -56964,8 +56964,11 @@ $packages["/home/h8liu/projects/gojs-pg/playground"] = (function() {
 	errErrLine = function(e) {
 		return errLine(e.Error());
 	};
-	getCode = function(scope) {
-		return new ($sliceType($Uint8))($stringToBytes($internalize(scope.Provider.Object.code, $String)));
+	getCode = function() {
+		return new ($sliceType($Uint8))($stringToBytes($internalize($global.getEditorValue(), $String)));
+	};
+	setCode = function(s) {
+		$global.setEditorValue($externalize(s, $String));
 	};
 	control = function(scope) {
 		var packages, pkgsToLoad, importContext, fileSet, pkgsReceived, run;
@@ -56992,7 +56995,7 @@ $packages["/home/h8liu/projects/gojs-pg/playground"] = (function() {
 			output = ($sliceType(Line)).nil;
 			scope.Provider.Object.output = $externalize(output, ($sliceType(Line)));
 			pkgsToLoad = ($sliceType($String)).nil;
-			_tuple = parser.ParseFile(fileSet, "prog.go", getCode(scope), 4); file = _tuple[0]; err = _tuple[1];
+			_tuple = parser.ParseFile(fileSet, "prog.go", getCode(), 4); file = _tuple[0]; err = _tuple[1];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				_tuple$1 = $assertType(err, scanner.ErrorList, true); list = _tuple$1[0]; ok = _tuple$1[1];
 				if (ok) {
@@ -57097,12 +57100,12 @@ $packages["/home/h8liu/projects/gojs-pg/playground"] = (function() {
 		run(true);
 		scope.Provider.Object.format = $externalize((function() {
 			var _tuple, out, err;
-			_tuple = format.Source(new ($sliceType($Uint8))($stringToBytes($internalize(scope.Provider.Object.code, $String)))); out = _tuple[0]; err = _tuple[1];
+			_tuple = format.Source(getCode()); out = _tuple[0]; err = _tuple[1];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				scope.Provider.Object.output = $externalize(new ($sliceType(Line))([errErrLine(err)]), ($sliceType(Line)));
 				return;
 			}
-			scope.Provider.Object.code = $externalize($bytesToString(out), $String);
+			setCode($bytesToString(out));
 			scope.Provider.Object.output = $externalize(new ($sliceType(Line))([]), ($sliceType(Line)));
 		}), ($funcType([], [], false)));
 	};

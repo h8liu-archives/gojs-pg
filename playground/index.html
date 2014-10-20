@@ -6,7 +6,9 @@
   </head>
   <body ng-controller="PlaygroundCtrl">
 
-    <div id="container"><div id="main"><div id="editor"></div></div></div>
+    <div id="container"><div id="main">
+        <div id="editor">package main</div>
+    </div></div>
     <script src="ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var editor = ace.edit("editor");
@@ -24,10 +26,17 @@
             fontSize: "13px",
         });
         editor.commands.removeCommands(["gotoline", "find"]);
+
+        function getEditorValue() {
+            return editor.getValue()
+        }
+
+        function setEditorValue(s) {
+            return editor.setValue(s)
+        }
     </script>
     
     <div id="banner">
-      <span id="head"><a href="https://github.com/gopherjs/gopherjs" style="color: black;">GopherJS</a> Playground</span>
       <span id="controls">
         <input type="button" value="Run" ng-click="run(false)" />
         <input type="button" value="Format" ng-click="format()" />

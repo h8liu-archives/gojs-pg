@@ -44,8 +44,13 @@ func errErrLine(e error) Line {
 	return errLine(e.Error())
 }
 
-func getCode(scope *angularjs.Scope) []byte {
-	return []byte(scope.Get("code").Str())
+func getCode() []byte {
+	return []byte(js.Global.Call("getEditorValue").Str())
+	// return []byte(scope.Get("code").Str())
+}
+
+func setCode(s string) {
+	js.Global.Call("setEditorValue", s)
 }
 
 func control(scope *angularjs.Scope) {
@@ -76,7 +81,7 @@ func control(scope *angularjs.Scope) {
 		pkgsToLoad = nil
 
 		file, err := parser.ParseFile(fileSet, "prog.go",
-			getCode(scope), parser.ParseComments,
+			getCode(), parser.ParseComments,
 		)
 		if err != nil {
 			if list, ok := err.(scanner.ErrorList); ok {
@@ -179,12 +184,13 @@ func control(scope *angularjs.Scope) {
 	run(true)
 
 	scope.Set("format", func() {
-		out, err := format.Source([]byte(scope.Get("code").Str()))
+		out, err := format.Source(getCode())
 		if err != nil {
 			scope.Set("output", []Line{errErrLine(err)})
 			return
 		}
-		scope.Set("code", string(out))
+		
+		setCode(string(out))
 		scope.Set("output", []Line{})
 	})
 }
